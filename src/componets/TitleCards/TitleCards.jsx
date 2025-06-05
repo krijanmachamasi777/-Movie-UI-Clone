@@ -1,14 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react'
-import './TitleCards.css'
-import cards_data from '../../assets/cards/Cards_data'
+import React, { useEffect, useRef, useState } from 'react';
+import './TitleCards.css';
 import { Link } from 'react-router-dom';
 
-
-const TitleCards = ({ title, category }) => {
-
+const TitleCards = ({ title = "Popular on Netflix", category = "now_playing" }) => {
   const [apiData, setApiData] = useState([]);
+  const [loading, setLoading] = useState(true);     // 👈 Loading state
+  const [error, setError] = useState(null);         // 👈 Error state
 
-  const cardsRef = useRef();
+   const cardsRef = useRef();
   const options = {
     method: 'GET',
     headers: {
@@ -18,34 +17,83 @@ const TitleCards = ({ title, category }) => {
   };
 
 
+  
 
   const handleWheel = (event) => {
     event.preventDefault();
-    cardsRef.current.scrollLeft += event.deltaY;
-  }
+    if (cardsRef.current) {
+      cardsRef.current.scrollLeft += event.deltaY;
+    }
+  };
 
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/movie/${category ? category : "now_playing"}?language=en-US&page=1`, options)
-      .then(res => res.json())
-      .then(res => setApiData(res.results))
-      .catch(err => console.error(err));
+    const fetchMovies = async () => {
+      setLoading(true);
+      setError(null);
 
-    cardsRef.current.addEventListener('wheel', handleWheel);
-  }, [])
+      const url = `https://api.themoviedb.org/3/movie/${category}?language=en-US&page=1`;
+
+      try {
+        const res = await fetch(url, options);
+        if (!res.ok) throw new Error(`API responded with status ${res.status}`);
+        const data = await res.json();
+        setApiData(data.results || []);
+      } catch (err) {
+        console.error('Failed to fetch movies:', err);
+        setError('Failed to load movies. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMovies();
+
+    const refCurrent = cardsRef.current;
+    if (refCurrent) {
+      refCurrent.addEventListener('wheel', handleWheel);
+    }
+
+    return () => {
+      if (refCurrent) {
+        refCurrent.removeEventListener('wheel', handleWheel);
+      }
+    };
+  }, [category]);
 
   return (
-    <div className='title-cards'>
-      <h2>{title ? title : "Popular on Netflix"}</h2>
-      <div className="card-list " ref={cardsRef}>
-        {apiData.map((card, index) => {
-          return <Link to ={`/player/${card.id}`} className="card" key={index}>
-            <img src={`https://image.tmdb.org/t/p/w500` + card.backdrop_path} alt="" />
-            <p>{card.original_title}</p>
+    <div className="title-cards">
+      <h2>{title}</h2>
+
+     {loading && (
+  <div className="loading-spinner">
+    <div className="spinner"></div>
+    <p>Loading...</p>
+  </div>
+)}
+
+      {error && <p className="error-msg">{error}</p>}
+
+      {!loading && !error && apiData.length === 0 && (
+        <p className="status-msg">No movies found.</p>
+      )}
+
+      <div className="card-list" ref={cardsRef}>
+        {!loading && !error && apiData.map((card) => (
+          <Link to={`/player/${card.id}`} className="card" key={card.id}>
+            <img
+              src={
+                card.backdrop_path
+                  ? `https://image.tmdb.org/t/p/w500${card.backdrop_path}`
+                  : '/fallback-image.jpg'
+              }
+              alt={card.original_title || 'Untitled'}
+            />
+            <p>{card.original_title || 'Untitled'}</p>
           </Link>
-        })}
+        ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TitleCards
+export default TitleCards;
