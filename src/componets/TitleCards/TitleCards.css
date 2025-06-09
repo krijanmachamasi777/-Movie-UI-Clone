@@ -30,6 +30,9 @@
     right: 10px;
     text-decoration: none;
     color: white;
+    font-weight: 600;
+   text-shadow: #999 0px 0px 5px;
+    
 }
 @media(max-width:800px){
     .title-cards {
