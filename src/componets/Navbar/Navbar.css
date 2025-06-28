@@ -31,6 +31,18 @@
 .navbar-left ul li {
     cursor: pointer;
 }
+.navbar ul li a {
+  color: white; 
+  text-decoration: none;
+}
+
+.navbar ul li a.active {
+  color: aqua;
+  text-decoration: underline;
+}
+
+
+
 
 .navbar-right {
     display: flex;

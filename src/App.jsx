@@ -15,6 +15,7 @@ const App = () => {
       if (user) {
         // User is signed in, you can access user details here
         console.log("User is signed in:", user);
+        
         navigate('/');
       } else {
         // User is signed out
