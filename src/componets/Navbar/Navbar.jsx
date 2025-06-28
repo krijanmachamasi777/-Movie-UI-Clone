@@ -34,6 +34,7 @@ const Navbar = () => {
                     <li><NavLink to="/languages" className={({ isActive }) => isActive ? 'active' : ''}>Browse by Languages</NavLink></li>
                 </ul>
             </div>
+            
             <div className="navbar-right">
                 <img src={search_icon} alt="" className='icons' />
                 <p>Children</p>
