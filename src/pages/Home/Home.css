@@ -98,3 +98,18 @@
     }
     
 }
+html {
+  scroll-behavior: smooth;
+}
+
+.static-section {
+  padding: 60px 20px;
+  background-color: #111;
+  color: #fff;
+  scroll-margin-top: 100px;
+}
+
+.static-section h2 {
+  margin-bottom: 10px;
+  font-size: 2rem;
+}

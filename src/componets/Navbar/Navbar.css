@@ -31,18 +31,11 @@
 .navbar-left ul li {
     cursor: pointer;
 }
-.navbar ul li a {
-  color: white; 
+.navbar-left ul li a {
+  color: white;
   text-decoration: none;
+  transition: 0.3s ease;
 }
-
-.navbar ul li a.active {
-  color: aqua;
-  text-decoration: underline;
-}
-
-
-
 
 .navbar-right {
     display: flex;
@@ -116,4 +109,11 @@
   .navbar-right{
     gap:10px;
   }
+}
+html {
+  scroll-behavior: smooth;
+}
+
+section {
+  scroll-margin-top: 100px; /* Prevent overlap with fixed navbar */
 }
