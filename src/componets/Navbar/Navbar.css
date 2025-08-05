@@ -35,12 +35,11 @@
 .navbar-left ul li a {
   color: white;
   text-decoration: none;
-  transition: 0.3s ease;
-  transform: scale(1.1);
+
 }
 .navbar-left ul li a:hover{
 border-bottom: 2px solid aqua;
-transform: scale(1.1);
+ color: aqua;
 }
 
 .navbar-right {
